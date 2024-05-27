@@ -18,6 +18,8 @@ export default function Home() {
         <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
         <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
       </div>
+
+      <h2 className='text-xl font-bold mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
     </>
   )
 }
