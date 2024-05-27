@@ -1,17 +1,23 @@
-import Image from 'next/image';
 import cad from '../../public/currencies/canada.svg';
+import { useState } from 'react';
+import Currency from '@/types/currency';
+import ConversionOptionChip from '@/components/ConversionOptionChip';
 
 export default function Home() {
+  const currenciesList = useState<Currency[]>(['USD', 'GBP']);
+  const currencyFrom = useState<Currency>('USD');
+  const currencyTo = useState<Currency>('EUR');
+
   return (
     <>
       <h1 className="font-bold">Complete Global Coverage</h1>
-      <span>
-        <Image src={cad} width={15} height={15} alt="Canada flag" className='inline-block' />
-        USD to CAD
-      </span>
-      <span>USD to CAD</span>
-      <span>USD to CAD</span>
-      <span>USD to CAD</span>
+      
+      <div className='whitespace-nowrap overflow-x-scroll no-scrollbar flex items-center gap-3 absolute right-0 left-0 h-16 px-8'>
+        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
+        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
+        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
+        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
+      </div>
     </>
   )
 }

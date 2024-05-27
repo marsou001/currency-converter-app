@@ -9,6 +9,7 @@ const config: Config = {
   ],
   theme: {
     fontSize: {
+      xs: '0.6rem',
       sm: '0.8rem',
       base: '1rem',
       xl: '1.25rem',
@@ -19,9 +20,9 @@ const config: Config = {
     },
     extend: {
       colors: {
-        white: 'fff',
         black: '#080808',
         blue: '#4133dd',
+        'blue-light': '#4133dd10',
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
