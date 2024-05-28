@@ -18,6 +18,19 @@ body {
     scrollbar-width: none;  /* Firefox */
 }
 
+/* Chrome, Safari and Opera */
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background-color: #bcbcbc;
+}
+.dropdown-menu::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* IE, Edge and Firefox */
+.dropdown-menu {
+  scrollbar-width: thin;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
