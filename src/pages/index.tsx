@@ -1,17 +1,10 @@
 import cad from '../../public/currencies/canada.svg';
-import eur from '../../public/currencies/european union.svg';
-import arrowDown from '../../public/arrow-down.png';
-import Image from 'next/image';
 import { useState, ChangeEvent } from 'react';
 import Currency from '@/types/Currency';
 import ConversionOptionChip from '@/components/ConversionOptionChip';
-import CurrencyFromMenuItem from '@/components/CurrencyFromMenuItem';
-import CurrencyMenu from '@/components/CurrencyFromMenu';
-import MenuControl from '@/components/MenuControl';
 import ConversionSection from '@/components/ConversionSection';
 
 export default function Home() {
-  const [currenciesList, _] = useState<Currency[]>(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'RMB', 'MYR', 'INR', 'KES']);
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
   const [amountFrom, setAmountFrom] = useState(1000);
   const [showFromMenu, setShowFromMenu] = useState(false);
@@ -19,17 +12,14 @@ export default function Home() {
   const [amountTo, setAmountTo] = useState(1000);
   const [showToMenu, setShowToMenu] = useState(false);
 
-  function toggleFromMenu() {
-    setShowFromMenu(show => !show);
-  }
-
-  function toggleShowToMenu() {
-    setShowToMenu(show => !show);
-  }
-
   function handleAmountFromChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
     setAmountFrom(Number(target.value));
+  }
+
+  function handleAmountToChange(event: ChangeEvent<HTMLInputElement>) {
+    const target = event.target;
+    setAmountTo(Number(target.value));
   }
 
   function handleCurrencyFromChange(newCurrency: Currency) {
@@ -38,6 +28,14 @@ export default function Home() {
 
   function handleCurrencyToChange(newCurrency: Currency) {
     setCurrencyTo(newCurrency);
+  }
+
+  function toggleFromMenu() {
+    setShowFromMenu(show => !show);
+  }
+
+  function toggleToMenu() {
+    setShowToMenu(show => !show);
   }
 
   return (
@@ -81,15 +79,15 @@ export default function Home() {
           </div>
 
           <h3 className='text-xs font-bold mb-2'>You Send</h3>
-          <div className='relative'>
-            <input type='number' value={1000} className='text-lg font-bold w-full py-2 pl-8 border border-gray-300 rounded-lg' />
-            <span className='absolute top-2 left-4'>$</span>
-            <div className="dropdown-control absolute top-2 right-2 inline-flex">
-              <Image src={eur} width={15} height={15} alt='European Union Flag' className='inline-block mr-1' />
-              <span className='text-gray-400'>EUR</span>
-              <Image src={arrowDown} width={25} height={1} alt='European Union Flag' className='inline-block transform scale-50' />
-            </div>
-          </div>
+          <ConversionSection
+            amount={amountTo}
+            handleAmountChange={handleAmountToChange}
+            currency={currencyTo}
+            currencyUnavailable={currencyFrom}
+            handleCurrencyChange={handleCurrencyToChange}
+            showMenu={showToMenu}
+            toggleMenu={toggleToMenu}
+          />
         </div>
       </div>
     </>
