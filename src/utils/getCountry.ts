@@ -1,6 +1,6 @@
 import Currency from "@/types/Currency";
 
-export default async function getCountry(currency: Currency) {
+export default function getCountry(currency: Currency) {
   switch(currency) {
     case 'USD':
       return 'United States';

@@ -1,6 +1,5 @@
 import MenuControlProps from '@/types/MenuControlProps';
-import getCountry from '@/utils/getCountry';
-import getCurrencyIcon from '@/utils/getCurrencyIcon';
+import { getCountry, getCurrencyIcon } from '@/utils';
 import Image from 'next/image';
 import { useState } from 'react';
 

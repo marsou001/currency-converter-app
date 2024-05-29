@@ -1,6 +1,5 @@
 import Image from 'next/image';
-import getCurrencyIcon from '@/utils/getCurrencyIcon';
-import getCountry from '@/utils/getCountry';
+import { getCountry, getCurrencyIcon } from '@/utils';
 import CurrencyMenuItemProps from '@/types/CurrencyMenuItemProps';
 
 export default function CurrencyFromMenuItem(props: CurrencyMenuItemProps) {
