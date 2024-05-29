@@ -1,9 +1,8 @@
-import ConversionSectionProps from "@/types/ConversionSectionProps";
-import Currency from "@/types/Currency";
 import { useState } from "react";
+import { Currency, ConversionSectionProps } from "@/types";
 import MenuControl from "./MenuControl";
-import CurrencyMenu from "./CurrencyFromMenu";
-import CurrencyFromMenuItem from "./CurrencyFromMenuItem";
+import CurrencyMenu from "./CurrencyMenu";
+import CurrencyMenuItem from "./CurrencyMenuItem";
 
 export default function ConversionSection(props: ConversionSectionProps) {
   const [currenciesList, _] = useState<Currency[]>(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'RMB', 'MYR', 'INR', 'KES']);
@@ -16,7 +15,7 @@ export default function ConversionSection(props: ConversionSectionProps) {
 
       <CurrencyMenu show={props.showMenu}>
         {currenciesList.map((currency) => (
-          <CurrencyFromMenuItem key={currency} currency={currency} isCurrencyChosen={currency === props.currency} isCurrencyAvailable={currency !== props.currencyUnavailable} handleCurrencyChange={props.handleCurrencyChange} />
+          <CurrencyMenuItem key={currency} currency={currency} isCurrencyChosen={currency === props.currency} isCurrencyAvailable={currency !== props.currencyUnavailable} handleCurrencyChange={props.handleCurrencyChange} />
         ))}
       </CurrencyMenu>
     </div>

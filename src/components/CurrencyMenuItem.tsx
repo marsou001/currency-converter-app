@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import CurrencyFromMenuItemProps from '@/types/CorrencyFromMenuItemProps';
 import getCurrencyIcon from '@/utils/getCurrencyIcon';
 import getCountry from '@/utils/getCountry';
 import CurrencyMenuItemProps from '@/types/CurrencyMenuItemProps';
