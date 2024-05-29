@@ -1,6 +1,6 @@
 import cad from '../../public/currencies/canada.svg';
 import { useState } from 'react';
-import Currency from '@/types/currency';
+import Currency from '@/types/Currency';
 import ConversionOptionChip from '@/components/ConversionOptionChip';
 
 

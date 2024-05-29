@@ -2,19 +2,42 @@ import cad from '../../public/currencies/canada.svg';
 import eur from '../../public/currencies/european union.svg';
 import arrowDown from '../../public/arrow-down.png';
 import Image from 'next/image';
-import { useState } from 'react';
-import Currency from '@/types/currency';
+import { useState, ChangeEvent } from 'react';
+import Currency from '@/types/Currency';
 import ConversionOptionChip from '@/components/ConversionOptionChip';
+import CurrencyFromMenuItem from '@/components/CurrencyFromMenuItem';
+import CurrencyMenu from '@/components/CurrencyFromMenu';
+import MenuControl from '@/components/MenuControl';
+import ConversionSection from '@/components/ConversionSection';
 
 export default function Home() {
-  const currenciesList = useState<Currency[]>(['USD', 'GBP']);
-  const currencyFrom = useState<Currency>('USD');
-  const currencyTo = useState<Currency>('EUR');
+  const [currenciesList, _] = useState<Currency[]>(['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'RMB', 'MYR', 'INR', 'KES']);
+  const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
+  const [amountFrom, setAmountFrom] = useState(1000);
+  const [showFromMenu, setShowFromMenu] = useState(false);
+  const [currencyTo, setCurrencyTo] = useState<Currency>('EUR');
+  const [amountTo, setAmountTo] = useState(1000);
+  const [showToMenu, setShowToMenu] = useState(false);
 
-  const [showMenu, setShowMenu] = useState(false);
+  function toggleFromMenu() {
+    setShowFromMenu(show => !show);
+  }
 
-  function toggleMenu() {
-    setShowMenu(show => !show);
+  function toggleShowToMenu() {
+    setShowToMenu(show => !show);
+  }
+
+  function handleAmountFromChange(event: ChangeEvent<HTMLInputElement>) {
+    const target = event.target;
+    setAmountFrom(Number(target.value));
+  }
+
+  function handleCurrencyFromChange(newCurrency: Currency) {
+    setCurrencyFrom(newCurrency);
+  }
+
+  function handleCurrencyToChange(newCurrency: Currency) {
+    setCurrencyTo(newCurrency);
   }
 
   return (
@@ -35,36 +58,15 @@ export default function Home() {
       
         <div className="exchange">
           <h3 className='text-xs font-bold mb-2'>Recipient Gets</h3>
-          <div className='relative'>
-            <input type='number' value={1000} className='text-lg font-bold w-full py-2 pl-8 border border-gray-300 rounded-lg' />
-            <span className='absolute top-2 left-4'>$</span>
-            <div className='dropdown-control absolute top-2 right-2 inline-flex' onClick={toggleMenu}>
-              <Image src={eur} width={15} height={15} alt='European Union Flag' className='inline-block mr-1' />
-              <span className='text-gray-400'>EUR</span>
-              <Image src={arrowDown} width={25} height={1} alt='European Union Flag' className='inline-block transform scale-50' />
-            </div>
-
-            <div className={`dropdown-menu bg-white absolute right-0 overflow-y-scroll w-2/5 ${showMenu ? 'h-28' : 'h-0'} z-10 shadow-gray-200 shadow-lg transition-all ease-in-out duration-150`}>
-              <ul className='pt-2'>
-                <li className='text-sm flex py-2 px-2'>
-                  <Image src={eur} width={15} height={15} alt='European Union Flag' className='inline-block mr-1' />
-                  <span>EUR</span>
-                </li>
-                <li className='text-sm flex py-2 px-2'>
-                  <Image src={eur} width={15} height={15} alt='European Union Flag' className='inline-block mr-1' />
-                  <span>EUR</span>
-                </li>
-                <li className='text-sm flex py-2 px-2'>
-                  <Image src={eur} width={15} height={15} alt='European Union Flag' className='inline-block mr-1' />
-                  <span>EUR</span>
-                </li>
-                <li className='text-sm flex py-2 px-2'>
-                  <Image src={eur} width={15} height={15} alt='European Union Flag' className='inline-block mr-1' />
-                  <span>EUR</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <ConversionSection
+            amount={amountFrom}
+            handleAmountChange={handleAmountFromChange}
+            currency={currencyFrom}
+            currencyUnavailable={currencyTo}
+            handleCurrencyChange={handleCurrencyFromChange}
+            showMenu={showFromMenu}
+            toggleMenu={toggleFromMenu}
+          />
 
           <div className='realtime-info text-xs my-4'>
             <p>

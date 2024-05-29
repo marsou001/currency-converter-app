@@ -1,4 +1,4 @@
-import Currency from "./currency"
+import Currency from "./Currency"
 
 type ConversionOptionChipProps = {
   flagIconURL: any;
