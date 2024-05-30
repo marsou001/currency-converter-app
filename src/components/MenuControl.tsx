@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function MenuControl(props: MenuControlProps) {
-  const [showMenu, setShowMenu] = useState(false);
   const flagIconURL = getCurrencyIcon(props.currency);
   const country = getCountry(props.currency);
   const arrowDown = '/arrow-down.png';

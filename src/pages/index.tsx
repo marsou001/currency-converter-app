@@ -1,8 +1,7 @@
-import cad from '../../public/currencies/canada.svg';
 import { useState, ChangeEvent } from 'react';
 import Currency from '@/types/Currency';
-import ConversionOptionChip from '@/components/ConversionOptionChip';
 import ConversionSection from '@/components/ConversionSection';
+import ConversionOptions from '@/components/ConversionOptions';
 
 export default function Home() {
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
@@ -42,12 +41,7 @@ export default function Home() {
     <>
       <h1 className="font-bold">Complete Global Coverage</h1>
       
-      <div className='whitespace-nowrap overflow-x-scroll no-scrollbar flex items-center gap-3 absolute right-0 left-0 h-16 px-8'>
-        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
-        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
-        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
-        <ConversionOptionChip currencyFrom='USD' currencyTo='CAD' flagIconURL={cad} altText='Canada Flag' />
-      </div>
+      <ConversionOptions />
 
       <h2 className='text-xl font-bold mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
 
