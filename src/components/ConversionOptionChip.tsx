@@ -6,9 +6,14 @@ export default function ConversionOptionChip(props: ConversionOptionChipProps) {
   const country = getCountry(props.currencyTo);
   const flagIconURL = getCurrencyIcon(props.currencyTo);
 
+  function setOption() {
+    props.setConversionOption(props.currencyFrom, props.currencyTo);
+  }
+
   return (
     <div
       className={`border-2 ${true ? 'border-transparent bg-white' : ' border-blue bg-blue-light'} flex items-center gap-1 rounded-lg py-2 pl-2 pr-6 shadow-gray-200 shadow-lg`}
+      onClick={setOption}
     >
       <Image 
         src={flagIconURL}

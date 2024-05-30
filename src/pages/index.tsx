@@ -11,6 +11,11 @@ export default function Home() {
   const [amountTo, setAmountTo] = useState(1000);
   const [showToMenu, setShowToMenu] = useState(false);
 
+  function setConversionOption(from: Currency, to: Currency) {
+    handleCurrencyFromChange(from);
+    handleCurrencyToChange(to);
+  }
+
   function handleAmountFromChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
     setAmountFrom(Number(target.value));
@@ -41,7 +46,7 @@ export default function Home() {
     <>
       <h1 className="font-bold">Complete Global Coverage</h1>
       
-      <ConversionOptions />
+      <ConversionOptions setConversionOption={setConversionOption} />
 
       <h2 className='text-xl font-bold mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
 
