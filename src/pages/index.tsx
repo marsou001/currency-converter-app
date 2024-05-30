@@ -3,6 +3,7 @@ import Currency from '@/types/Currency';
 import ConversionSection from '@/components/ConversionSection';
 import ConversionOptions from '@/components/ConversionOptions';
 import ConversionDetailsInfo from '@/components/ConversionDetailsInfo';
+import Benefits from '@/components/Benefits';
 
 export default function Home() {
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
@@ -55,7 +56,10 @@ export default function Home() {
         <h3 className='font-bold text-center w-3/4 mx-auto mb-8'>Save up to 50% on foreign exchange rates</h3>
       
         <div className="exchange">
+
+          {/* choose source currency */}
           <h3 className='text-xs font-bold mb-2'>Recipient Gets</h3>
+
           <ConversionSection
             amount={amountFrom}
             handleAmountChange={handleAmountFromChange}
@@ -68,7 +72,9 @@ export default function Home() {
 
           <ConversionDetailsInfo />
           
+          {/* choose destination currency */}
           <h3 className='text-xs font-bold mb-2'>You Send</h3>
+
           <ConversionSection
             amount={amountTo}
             handleAmountChange={handleAmountToChange}
@@ -81,16 +87,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className='benefits text-gray-500'>
-        <h3 className='text-sm'>Get the best exchange rates from leading providers and save money on your international payments</h3>
-        <ul className='text-xs list-disc mt-3 mb-5 pl-3'>
-          <li>Compare exchange rates from leading providers to find the best deal.</li>
-          <li>Save money on your international payments by using a reputable foreign exchange company.</li>
-          <li>Get the most out of your money by comparing foreign exchange rates and choosing the best deal.</li>
-        </ul>
-
-        <button className='text-white bg-blue text-xs py-2 px-5 rounded-md'>Learn More</button>
-      </div>
+      <Benefits />
     </>
   )
 }
