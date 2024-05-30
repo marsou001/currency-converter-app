@@ -7,7 +7,7 @@ export default function Home() {
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
   const [amountFrom, setAmountFrom] = useState(1000);
   const [showFromMenu, setShowFromMenu] = useState(false);
-  const [currencyTo, setCurrencyTo] = useState<Currency>('EUR');
+  const [currencyTo, setCurrencyTo] = useState<Currency>('CAD');
   const [amountTo, setAmountTo] = useState(1000);
   const [showToMenu, setShowToMenu] = useState(false);
 
@@ -46,7 +46,7 @@ export default function Home() {
     <>
       <h1 className="font-bold">Complete Global Coverage</h1>
       
-      <ConversionOptions setConversionOption={setConversionOption} />
+      <ConversionOptions currencyFrom={currencyFrom} currencyTo={currencyTo} setConversionOption={setConversionOption} />
 
       <h2 className='text-xl font-bold mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
 

@@ -3,16 +3,18 @@ import ConversionOptionChipProps from "@/types/ConversionOptionChipProps";
 import { getCountry, getCurrencyIcon } from '@/utils';
 
 export default function ConversionOptionChip(props: ConversionOptionChipProps) {
-  const country = getCountry(props.currencyTo);
-  const flagIconURL = getCurrencyIcon(props.currencyTo);
+  const country = getCountry(props.to);
+  const flagIconURL = getCurrencyIcon(props.to);
 
   function setOption() {
-    props.setConversionOption(props.currencyFrom, props.currencyTo);
+    props.setConversionOption(props.from, props.to);
   }
+
+  const isSelected = props.from === props.currencyFrom && props.to === props.currencyTo;
 
   return (
     <div
-      className={`border-2 ${true ? 'border-transparent bg-white' : ' border-blue bg-blue-light'} flex items-center gap-1 rounded-lg py-2 pl-2 pr-6 shadow-gray-200 shadow-lg`}
+      className={`border-2 ${isSelected ? 'border-blue bg-blue-light' : 'border-transparent bg-white'} flex items-center gap-1 rounded-lg py-2 pl-2 pr-6 shadow-gray-200 shadow-lg`}
       onClick={setOption}
     >
       <Image 
@@ -22,7 +24,7 @@ export default function ConversionOptionChip(props: ConversionOptionChipProps) {
         alt={`${country} flag icon`}
         className='inline-block'
       />
-      <span className="text-xs transform translate-y-px">{ props.currencyFrom } to { props.currencyTo }</span>
+      <span className="text-xs transform translate-y-px">{ props.from } to { props.to }</span>
     </div>
   )
 }
