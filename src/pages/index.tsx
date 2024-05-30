@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react';
 import Currency from '@/types/Currency';
 import ConversionSection from '@/components/ConversionSection';
 import ConversionOptions from '@/components/ConversionOptions';
+import ConversionDetailsInfo from '@/components/ConversionDetailsInfo';
 
 export default function Home() {
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
@@ -65,18 +66,8 @@ export default function Home() {
             toggleMenu={toggleFromMenu}
           />
 
-          <div className='realtime-info text-xs my-4'>
-            <p>
-              <span className='text-blue text-base font-bold inline-block mr-2 tranform translate-y-0.5'>x</span>
-              1.081681 guaranteed rate for 5 min
-            </p>
-            
-            <p>
-              <span className='text-blue text-base font-bold inline-block mr-2 tranform translate-y-0.5'>+</span>
-              $0.00 fee
-            </p>
-          </div>
-
+          <ConversionDetailsInfo />
+          
           <h3 className='text-xs font-bold mb-2'>You Send</h3>
           <ConversionSection
             amount={amountTo}
