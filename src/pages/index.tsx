@@ -45,49 +45,53 @@ export default function Home() {
   }
 
   return (
-    <>
-      <h1 className="font-bold">Complete Global Coverage</h1>
+    <div className='max-w-[404px] md:max-w-none mx-auto'>
+      <div className='md:flex md:justify-between md:items-center'>
+        <h1 className='font-bold'>Complete Global Coverage</h1>
       
-      <ConversionOptions currencyFrom={currencyFrom} currencyTo={currencyTo} setConversionOption={setConversionOption} />
-
-      <h2 className='text-xl font-bold mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
-
-      <div className='bg-white my-8 p-8 rounded-lg shadow-gray-200 shadow-lg'>
-        <h3 className='font-bold text-center w-3/4 mx-auto mb-8'>Save up to 50% on foreign exchange rates</h3>
-      
-        <div className="exchange">
-
-          {/* choose source currency */}
-          <h3 className='text-xs font-bold mb-2'>Recipient Gets</h3>
-
-          <ConversionSection
-            amount={amountFrom}
-            handleAmountChange={handleAmountFromChange}
-            currency={currencyFrom}
-            currencyUnavailable={currencyTo}
-            handleCurrencyChange={handleCurrencyFromChange}
-            showMenu={showFromMenu}
-            toggleMenu={toggleFromMenu}
-          />
-
-          <ConversionDetailsInfo />
-          
-          {/* choose destination currency */}
-          <h3 className='text-xs font-bold mb-2'>You Send</h3>
-
-          <ConversionSection
-            amount={amountTo}
-            handleAmountChange={handleAmountToChange}
-            currency={currencyTo}
-            currencyUnavailable={currencyFrom}
-            handleCurrencyChange={handleCurrencyToChange}
-            showMenu={showToMenu}
-            toggleMenu={toggleToMenu}
-          />
-        </div>
+        <ConversionOptions currencyFrom={currencyFrom} currencyTo={currencyTo} setConversionOption={setConversionOption} />
       </div>
 
-      <Benefits />
-    </>
+      <h2 className='text-xl font-bold md:hidden mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
+
+      <div className='md:flex md:justify-between md:items-center'>
+        <div className='bg-white md:order-last max-w-[340px] md:w-[340px] box-content my-8 p-8 rounded-lg shadow-gray-200 shadow-lg'>
+          <h3 className='font-bold text-center w-3/4 mx-auto mb-8'>Save up to 50% on foreign exchange rates</h3>
+        
+          <div className='exchange'>
+
+            {/* choose source currency */}
+            <h3 className='text-xs font-bold mb-2'>Recipient Gets</h3>
+
+            <ConversionSection
+              amount={amountFrom}
+              handleAmountChange={handleAmountFromChange}
+              currency={currencyFrom}
+              currencyUnavailable={currencyTo}
+              handleCurrencyChange={handleCurrencyFromChange}
+              showMenu={showFromMenu}
+              toggleMenu={toggleFromMenu}
+            />
+
+            <ConversionDetailsInfo />
+            
+            {/* choose destination currency */}
+            <h3 className='text-xs font-bold mb-2'>You Send</h3>
+
+            <ConversionSection
+              amount={amountTo}
+              handleAmountChange={handleAmountToChange}
+              currency={currencyTo}
+              currencyUnavailable={currencyFrom}
+              handleCurrencyChange={handleCurrencyToChange}
+              showMenu={showToMenu}
+              toggleMenu={toggleToMenu}
+            />
+          </div>
+        </div>
+
+        <Benefits />
+      </div>
+    </div>
   )
 }

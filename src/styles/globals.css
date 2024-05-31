@@ -36,3 +36,9 @@ body {
     text-wrap: balance;
   }
 }
+
+@media (min-width: 1024px) {
+  body {
+    margin: 50px 12rem;
+  }
+}
