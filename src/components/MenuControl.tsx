@@ -1,7 +1,6 @@
 import MenuControlProps from '@/types/MenuControlProps';
 import { getCountry, getCurrencyIcon } from '@/utils';
 import Image from 'next/image';
-import { useState } from 'react';
 
 export default function MenuControl(props: MenuControlProps) {
   const flagIconURL = getCurrencyIcon(props.currency);
