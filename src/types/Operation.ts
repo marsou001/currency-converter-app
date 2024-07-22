@@ -4,7 +4,6 @@ type Operation = {
   source: Currency;
   target: Currency;
   exchangeRate: number;
-  inverseRate: number;
   timestamp: number;
 }
 
