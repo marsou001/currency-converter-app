@@ -5,6 +5,7 @@ import ConversionSectionProps from "./ConversionSectionProps";
 import ConversionOptionsProps from "./ConversionOptionsProps";
 import ConversionOptionChipProps from "./ConversionOptionChipProps";
 import MenuControlProps from "./MenuControlProps";
+import Operation from "./Operation";
 
 export type {
   Currency,
@@ -14,4 +15,5 @@ export type {
   ConversionOptionsProps,
   ConversionOptionChipProps,
   MenuControlProps,
+  Operation,
 }
