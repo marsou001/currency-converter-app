@@ -19,9 +19,10 @@ export default function Home() {
     async function initSetup () {
       // Asynchronous action to get rate
       const exchangeRate = await fetchExchangeRate(currencyFrom, currencyTo);
-          
       setOperations(currencyFrom, currencyTo, exchangeRate);
-      setAmountTo(amountFrom * exchangeRate);
+
+      const result = Number((amountFrom * exchangeRate).toFixed(2));
+      setAmountTo(result);
     }
 
     initSetup()
@@ -43,7 +44,8 @@ export default function Home() {
 
     if (operation) {
       if (isRateStillValid(operation.timestamp)) {
-        callback(amount * operation.exchangeRate);
+        const result = Number((amount * operation.exchangeRate).toFixed(2));
+        callback(result);
       } else {
         // Asynchronous action to get new rate
         const exchangeRate = await fetchExchangeRate(source, target);
@@ -54,13 +56,16 @@ export default function Home() {
         // Update inverse rate
         inverseOperation.exchangeRate = 1 / operation.exchangeRate;
        
-        callback(amount * operation.exchangeRate)
+        const result = Number((amount * operation.exchangeRate).toFixed(2));
+        callback(result);
       }
     } else {
       // Asynchronous action to get rate
       const exchangeRate = await fetchExchangeRate(source, target);
-      // callback(amount * exchangeRate, field)
-      callback(amount * exchangeRate);
+      
+      const result = Number((amount * exchangeRate).toFixed(2));
+      callback(result);
+      
       setOperations(source, target, exchangeRate);
     }
   }
