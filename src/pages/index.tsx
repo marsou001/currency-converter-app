@@ -16,11 +16,16 @@ export default function Home() {
   const [updates, setUpdates] = useState<Record<string, Operation>>({});
 
   useEffect(() => {
-    // Asynchronous action to get rate
-    const exchangeRate = 77
-    setOperations(currencyFrom, currencyTo, exchangeRate)
-    setAmountTo(amountFrom * exchangeRate)
-  }, [])
+    async function initSetup () {
+      // Asynchronous action to get rate
+      const exchangeRate = await fetchExchangeRate(currencyFrom, currencyTo);
+          
+      setOperations(currencyFrom, currencyTo, exchangeRate);
+      setAmountTo(amountFrom * exchangeRate);
+    }
+
+    initSetup()
+  }, []);
 
   function setConversionOption(from: Currency, to: Currency) {
     setCurrencyFrom(from)
@@ -28,7 +33,7 @@ export default function Home() {
     setupdates(amountFrom, setAmountTo, from, to)
   }
 
-  function setupdates(
+  async function setupdates(
     amount: number,
     callback: Dispatch<SetStateAction<number>>,
     source: Currency,
@@ -38,12 +43,12 @@ export default function Home() {
 
     if (operation) {
       if (isRateStillValid(operation.timestamp)) {
-        callback(amount * operation.exchangeRate)
+        callback(amount * operation.exchangeRate);
       } else {
         // Asynchronous action to get new rate
-        const exchangeRate = 333
+        const exchangeRate = await fetchExchangeRate(source, target);
         // Update exchange rate
-        operation.exchangeRate = exchangeRate
+        operation.exchangeRate = exchangeRate;
         // Get inverse operation to update its exchange rate as well
         const inverseOperation = getOperation(target, source, updates)!;
         // Update inverse rate
@@ -53,10 +58,10 @@ export default function Home() {
       }
     } else {
       // Asynchronous action to get rate
-      const exchangeRate = 77
+      const exchangeRate = await fetchExchangeRate(source, target);
       // callback(amount * exchangeRate, field)
-      callback(amount * exchangeRate)
-      setOperations(source, target, exchangeRate)
+      callback(amount * exchangeRate);
+      setOperations(source, target, exchangeRate);
     }
   }
 
@@ -106,6 +111,13 @@ export default function Home() {
 
   function toggleToMenu() {
     setShowToMenu(show => !show);
+  }
+
+  function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
+    // async operation, generating random number at the moment
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(Math.random()), 500);
+    });
   }
 
   return (
