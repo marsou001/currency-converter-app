@@ -6,6 +6,5 @@ export default function getOperation(
   history: Record<string, Operation>
 ): Operation | undefined {
   const operation = `${source} to ${target}`;
-  const inverseOperation = `${target} to ${source}`
-  return history[operation] || history[inverseOperation];
+  return history[operation];
 }
