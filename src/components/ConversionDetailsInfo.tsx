@@ -1,9 +1,11 @@
-export default function ConversionDetailsInfo() {
+import { ConversionDetailsInfoProps } from "@/types";
+
+export default function ConversionDetailsInfo({ exchangeRate }: ConversionDetailsInfoProps) {
   return (
     <div className='realtime-info text-xs my-4'>
       <p>
         <span className='text-blue text-base font-bold inline-block mr-2 tranform translate-y-0.5'>x</span>
-        1.081681 guaranteed rate for 5 min
+        { exchangeRate } guaranteed rate for 5 min
       </p>
       
       <p>

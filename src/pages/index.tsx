@@ -14,6 +14,7 @@ export default function Home() {
   const [amountTo, setAmountTo] = useState(1000);
   const [showToMenu, setShowToMenu] = useState(false);
   const [updates, setUpdates] = useState<Record<string, Operation>>({});
+  const [exchangeRate, setExchangeRate] = useState(1.081681);
 
   useEffect(() => {
     async function initSetup () {
@@ -23,6 +24,9 @@ export default function Home() {
 
       const result = Number((amountFrom * exchangeRate).toFixed(2));
       setAmountTo(result);
+     
+      const displayRate = Number((exchangeRate).toFixed(6));
+      setExchangeRate(displayRate);
     }
 
     initSetup()
@@ -46,6 +50,9 @@ export default function Home() {
       if (isRateStillValid(operation.timestamp)) {
         const result = Number((amount * operation.exchangeRate).toFixed(2));
         callback(result);
+
+        const displayRate = Number((operation.exchangeRate).toFixed(6));
+        setExchangeRate(displayRate);
       } else {
         // Asynchronous action to get new rate
         const exchangeRate = await fetchExchangeRate(source, target);
@@ -58,6 +65,9 @@ export default function Home() {
        
         const result = Number((amount * operation.exchangeRate).toFixed(2));
         callback(result);
+
+        const displayRate = Number((exchangeRate).toFixed(6));
+        setExchangeRate(displayRate);
       }
     } else {
       // Asynchronous action to get rate
@@ -65,6 +75,9 @@ export default function Home() {
       
       const result = Number((amount * exchangeRate).toFixed(2));
       callback(result);
+
+      const displayRate = Number((exchangeRate).toFixed(6));
+      setExchangeRate(displayRate);
       
       setOperations(source, target, exchangeRate);
     }
@@ -154,7 +167,7 @@ export default function Home() {
               toggleMenu={toggleFromMenu}
             />
 
-            <ConversionDetailsInfo />
+            <ConversionDetailsInfo exchangeRate={exchangeRate} />
             
             {/* choose destination currency */}
             <h3 className='text-xs font-bold mb-2'>You Send</h3>

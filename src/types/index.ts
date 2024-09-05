@@ -4,6 +4,7 @@ import CurrencyMenuItemProps from "./CurrencyMenuItemProps";
 import ConversionSectionProps from "./ConversionSectionProps";
 import ConversionOptionsProps from "./ConversionOptionsProps";
 import ConversionOptionChipProps from "./ConversionOptionChipProps";
+import ConversionDetailsInfoProps from "./ConversionDetailsInfoProps";
 import MenuControlProps from "./MenuControlProps";
 import Operation from "./Operation";
 
@@ -14,6 +15,7 @@ export type {
   ConversionSectionProps,
   ConversionOptionsProps,
   ConversionOptionChipProps,
+  ConversionDetailsInfoProps,
   MenuControlProps,
   Operation,
 }
