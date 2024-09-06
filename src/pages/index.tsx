@@ -25,8 +25,7 @@ export default function Home() {
       const result = Number((amountFrom * exchangeRate).toFixed(2));
       setAmountTo(result);
      
-      const displayRate = Number((exchangeRate).toFixed(6));
-      setExchangeRate(displayRate);
+      showNewExchangeRate(exchangeRate);
     }
 
     initSetup()
@@ -46,40 +45,24 @@ export default function Home() {
   ) {
     const operation = getOperation(source, target, updates)
 
-    if (operation) {
-      if (isRateStillValid(operation.timestamp)) {
-        const result = Number((amount * operation.exchangeRate).toFixed(2));
-        callback(result);
-
-        const displayRate = Number((operation.exchangeRate).toFixed(6));
-        setExchangeRate(displayRate);
-      } else {
-        // Asynchronous action to get new rate
-        const exchangeRate = await fetchExchangeRate(source, target);
-        // Update exchange rate
-        operation.exchangeRate = exchangeRate;
-        // Get inverse operation to update its exchange rate as well
-        const inverseOperation = getOperation(target, source, updates)!;
-        // Update inverse rate
-        inverseOperation.exchangeRate = 1 / operation.exchangeRate;
-       
-        const result = Number((amount * operation.exchangeRate).toFixed(2));
-        callback(result);
-
-        const displayRate = Number((exchangeRate).toFixed(6));
-        setExchangeRate(displayRate);
-      }
-    } else {
-      // Asynchronous action to get rate
-      const exchangeRate = await fetchExchangeRate(source, target);
-      
-      const result = Number((amount * exchangeRate).toFixed(2));
+    if (operation && isRateStillValid(operation.timestamp)) {
+      // Show rate as 2 decimals number
+      const result = Number((amount * operation.exchangeRate).toFixed(2));
       callback(result);
 
-      const displayRate = Number((exchangeRate).toFixed(6));
-      setExchangeRate(displayRate);
-      
+      // Display new rate
+      showNewExchangeRate(operation.exchangeRate);
+    } else {
+      // Asynchronous action to get new rate
+      const exchangeRate = await fetchExchangeRate(source, target);
+      // Cache new rate
       setOperations(source, target, exchangeRate);
+      // Show rate as 2 decimals number
+      const result = Number((amount * exchangeRate).toFixed(2));
+      callback(result);
+      
+      // Display new rate
+      showNewExchangeRate(exchangeRate);
     }
   }
 
@@ -99,6 +82,11 @@ export default function Home() {
     })
   }
 
+  function showNewExchangeRate(exchangeRate: number) {
+    const newExchangeRate = Number((exchangeRate).toFixed(6));
+    setExchangeRate(newExchangeRate);
+  }
+
   function handleAmountFromChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
     const newAmountFrom = Number(target.value);
@@ -115,12 +103,12 @@ export default function Home() {
 
   function handleCurrencyFromChange(newCurrency: Currency) {
     setCurrencyFrom(newCurrency);
-    setupdates(amountFrom, setAmountTo, currencyFrom, currencyTo)
+    setupdates(amountFrom, setAmountTo, newCurrency, currencyTo)
   }
 
   function handleCurrencyToChange(newCurrency: Currency) {
     setCurrencyTo(newCurrency);
-    setupdates(amountFrom, setAmountTo, currencyFrom, currencyTo)
+    setupdates(amountFrom, setAmountTo, currencyFrom, newCurrency)
   }
 
   function toggleFromMenu() {
