@@ -13,7 +13,7 @@ export default function Home() {
   const [currencyTo, setCurrencyTo] = useState<Currency>('CAD');
   const [amountTo, setAmountTo] = useState(1000);
   const [showToMenu, setShowToMenu] = useState(false);
-  const [updates, setUpdates] = useState<Record<string, Operation>>({});
+  const [history, setHistory] = useState<Record<string, Operation>>({});
   const [exchangeRate, setExchangeRate] = useState(1.081681);
 
   useEffect(() => {
@@ -34,16 +34,16 @@ export default function Home() {
   function setConversionOption(from: Currency, to: Currency) {
     setCurrencyFrom(from)
     setCurrencyTo(to)
-    setupdates(amountFrom, setAmountTo, from, to)
+    editHistory(amountFrom, setAmountTo, from, to)
   }
 
-  async function setupdates(
+  async function editHistory(
     amount: number,
     callback: Dispatch<SetStateAction<number>>,
     source: Currency,
     target: Currency,
   ) {
-    const operation = getOperation(source, target, updates)
+    const operation = getOperation(source, target, history)
 
     if (operation && isRateStillValid(operation.timestamp)) {
       // Show rate as 2 decimals number
@@ -70,8 +70,8 @@ export default function Home() {
     const inverseRate = 1 / exchangeRate;
     const timestamp = Date.now();
 
-    setUpdates({
-      ...updates,
+    setHistory({
+      ...history,
       [`${source} to ${target}`]: { source, target, timestamp, exchangeRate },
       [`${target} to ${source}`]: {
         source: target,
@@ -91,24 +91,24 @@ export default function Home() {
     const target = event.target;
     const newAmountFrom = Number(target.value);
     setAmountFrom(newAmountFrom);
-    setupdates(newAmountFrom, setAmountTo, currencyFrom, currencyTo)
+    editHistory(newAmountFrom, setAmountTo, currencyFrom, currencyTo)
   }
 
   function handleAmountToChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
     const newAmountTo = Number(target.value);
     setAmountTo(newAmountTo);
-    setupdates(newAmountTo, setAmountFrom, currencyTo, currencyFrom)
+    editHistory(newAmountTo, setAmountFrom, currencyTo, currencyFrom)
   }
 
   function handleCurrencyFromChange(newCurrency: Currency) {
     setCurrencyFrom(newCurrency);
-    setupdates(amountFrom, setAmountTo, newCurrency, currencyTo)
+    editHistory(amountFrom, setAmountTo, newCurrency, currencyTo)
   }
 
   function handleCurrencyToChange(newCurrency: Currency) {
     setCurrencyTo(newCurrency);
-    setupdates(amountFrom, setAmountTo, currencyFrom, newCurrency)
+    editHistory(amountFrom, setAmountTo, currencyFrom, newCurrency)
   }
 
   function toggleFromMenu() {
