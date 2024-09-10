@@ -89,13 +89,19 @@ export default function Home() {
 
   function handleAmountFromChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
+    // Don't proceed if there are non-numerical values in input
+    if (target.validity.patternMismatch) return;
+    
     const newAmountFrom = Number(target.value);
     setAmountFrom(newAmountFrom);
     editHistory(newAmountFrom, setAmountTo, currencyFrom, currencyTo)
   }
-
+  
   function handleAmountToChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
+    // Don't proceed if there are non-numerical values in input
+    if (target.validity.patternMismatch) return;
+
     const newAmountTo = Number(target.value);
     setAmountTo(newAmountTo);
     editHistory(newAmountTo, setAmountFrom, currencyTo, currencyFrom)
