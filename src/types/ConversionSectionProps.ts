@@ -6,7 +6,7 @@ type ConversionSectionProps = {
   currencyUnavailable: Currency;
   handleCurrencyChange: (currency: Currency) => void;
   amount: number;
-  handleAmountChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleAmountChange: (amount: number) => void;
   showMenu: boolean;
   toggleMenu: () => void;
 }
