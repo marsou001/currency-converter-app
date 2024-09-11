@@ -1,4 +1,3 @@
-import { ChangeEvent } from "react";
 import Currency from "./Currency"
 
 type ConversionSectionProps = {
@@ -7,8 +6,6 @@ type ConversionSectionProps = {
   handleCurrencyChange: (currency: Currency) => void;
   amount: number;
   handleAmountChange: (amount: number) => void;
-  showMenu: boolean;
-  toggleMenu: () => void;
 }
 
 export default ConversionSectionProps;

@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, Dispatch, SetStateAction, useEffect } from 'react';
+import { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import { Currency, Operation } from '@/types';
 import ConversionSection from '@/components/ConversionSection';
 import ConversionOptions from '@/components/ConversionOptions';
@@ -9,10 +9,8 @@ import { getOperation, isRateStillValid } from '@/utils';
 export default function Home() {
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
   const [amountFrom, setAmountFrom] = useState(1000);
-  const [showFromMenu, setShowFromMenu] = useState(false);
   const [currencyTo, setCurrencyTo] = useState<Currency>('CAD');
   const [amountTo, setAmountTo] = useState(1000);
-  const [showToMenu, setShowToMenu] = useState(false);
   const [history, setHistory] = useState<Record<string, Operation>>({});
   const [exchangeRate, setExchangeRate] = useState(1.081681);
 
@@ -107,14 +105,6 @@ export default function Home() {
     editHistory(amountFrom, setAmountTo, currencyFrom, newCurrency)
   }
 
-  function toggleFromMenu() {
-    setShowFromMenu(show => !show);
-  }
-
-  function toggleToMenu() {
-    setShowToMenu(show => !show);
-  }
-
   function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
     // async operation, generating random number at the moment
     return new Promise((resolve) => {
@@ -147,8 +137,6 @@ export default function Home() {
               currency={currencyFrom}
               currencyUnavailable={currencyTo}
               handleCurrencyChange={handleCurrencyFromChange}
-              showMenu={showFromMenu}
-              toggleMenu={toggleFromMenu}
             />
 
             <ConversionDetailsInfo exchangeRate={exchangeRate} />
@@ -162,8 +150,6 @@ export default function Home() {
               currency={currencyTo}
               currencyUnavailable={currencyFrom}
               handleCurrencyChange={handleCurrencyToChange}
-              showMenu={showToMenu}
-              toggleMenu={toggleToMenu}
             />
           </div>
         </div>
