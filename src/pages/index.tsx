@@ -8,9 +8,9 @@ import { getOperation, isRateStillValid } from '@/utils';
 
 export default function Home() {
   const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
-  const [amountFrom, setAmountFrom] = useState(1000);
+  const [amountFrom, setAmountFrom] = useState('1000');
   const [currencyTo, setCurrencyTo] = useState<Currency>('CAD');
-  const [amountTo, setAmountTo] = useState(1000);
+  const [amountTo, setAmountTo] = useState('1000');
   const [history, setHistory] = useState<Record<string, Operation>>({});
   const [exchangeRate, setExchangeRate] = useState(1.081681);
 
@@ -20,7 +20,7 @@ export default function Home() {
       const exchangeRate = await fetchExchangeRate(currencyFrom, currencyTo);
       setOperations(currencyFrom, currencyTo, exchangeRate);
 
-      const result = Number((amountFrom * exchangeRate).toFixed(2));
+      const result = (Number(amountFrom) * exchangeRate).toFixed(2);
       setAmountTo(result);
      
       showNewExchangeRate(exchangeRate);
@@ -36,8 +36,8 @@ export default function Home() {
   }
 
   async function editHistory(
-    amount: number,
-    callback: Dispatch<SetStateAction<number>>,
+    amount: string,
+    callback: Dispatch<SetStateAction<string>>,
     source: Currency,
     target: Currency,
   ) {
@@ -45,7 +45,7 @@ export default function Home() {
 
     if (operation && isRateStillValid(operation.timestamp)) {
       // Show rate as 2 decimals number
-      const result = Number((amount * operation.exchangeRate).toFixed(2));
+      const result = (Number(amount) * operation.exchangeRate).toFixed(2);
       callback(result);
 
       // Display new rate
@@ -56,7 +56,7 @@ export default function Home() {
       // Cache new rate
       setOperations(source, target, exchangeRate);
       // Show rate as 2 decimals number
-      const result = Number((amount * exchangeRate).toFixed(2));
+      const result = (Number(amount) * exchangeRate).toFixed(2);
       callback(result);
       
       // Display new rate
@@ -85,12 +85,12 @@ export default function Home() {
     setExchangeRate(newExchangeRate);
   }
 
-  function handleAmountFromChange(amount: number) { 
+  function handleAmountFromChange(amount: string) { 
     setAmountFrom(amount);
     editHistory(amount, setAmountTo, currencyFrom, currencyTo)
   }
   
-  function handleAmountToChange(amount: number) {
+  function handleAmountToChange(amount: string) {
     setAmountTo(amount);
     editHistory(amount, setAmountFrom, currencyTo, currencyFrom)
   }

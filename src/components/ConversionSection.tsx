@@ -21,8 +21,7 @@ export default function ConversionSection(props: ConversionSectionProps) {
     
     setShowInvalidInputError(false);
     
-    const newAmount = Number(target.value);
-
+    const newAmount = target.value;
     props.handleAmountChange(newAmount)
   }
 
@@ -32,7 +31,7 @@ export default function ConversionSection(props: ConversionSectionProps) {
 
   return (
     <div className='relative'>
-      <input type='text' inputMode="decimal" pattern="\d+((\.)?(\d+))?" value={props.amount} onChange={onAmountChange} className='text-lg font-bold w-full py-2 pl-8 border border-gray-300 rounded-lg' />
+      <input type='text' inputMode="decimal" pattern="\d+(\.)?\d*" value={props.amount} onChange={onAmountChange} className='text-lg font-bold w-full py-2 pl-8 border border-gray-300 rounded-lg' />
       <span className='absolute top-2 left-4'>{ symbol }</span>
       <MenuControl currency={props.currency} toggleShowMenu={toggleMenu} />
       { showInvalidInputError && <span role="alert" className="text-red-500 text-xs absolute -bottom-4 left-0">Please enter a valid number!</span> }
