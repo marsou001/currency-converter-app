@@ -13,33 +13,43 @@ export default function Home() {
   const [amountTo, setAmountTo] = useState('1000');
   const [history, setHistory] = useState<Record<string, Operation>>({});
   const [exchangeRate, setExchangeRate] = useState(1.081681);
+  const [isFetchingExchangeRate, setIsFetchingExchangeRate] = useState(false);
+  const [isFetchingReverseRate, setIsFetchingReverseRate] = useState(false);
 
   useEffect(() => {
     async function initSetup () {
-      // Asynchronous action to get rate
-      const exchangeRate = await fetchExchangeRate(currencyFrom, currencyTo);
-      setOperations(currencyFrom, currencyTo, exchangeRate);
+      setIsFetchingExchangeRate(true);
 
-      const result = (Number(amountFrom) * exchangeRate).toFixed(2);
-      setAmountTo(result);
-     
-      showNewExchangeRate(exchangeRate);
+      try {
+        const exchangeRate = await fetchExchangeRate(currencyFrom, currencyTo);
+        setOperations(currencyFrom, currencyTo, exchangeRate);
+
+        const result = (Number(amountFrom) * exchangeRate).toFixed(2);
+        setAmountTo(result);
+      
+        showNewExchangeRate(exchangeRate);
+      } catch {
+        console.log('Something went wrong!');
+      }
+
+      setIsFetchingExchangeRate(false);
     }
 
     initSetup()
   }, []);
 
   function setConversionOption(from: Currency, to: Currency) {
-    setCurrencyFrom(from)
-    setCurrencyTo(to)
-    editHistory(amountFrom, setAmountTo, from, to)
+    setCurrencyFrom(from);
+    setCurrencyTo(to);
+    editHistory(amountFrom, from, to, setAmountTo, setIsFetchingExchangeRate);
   }
 
   async function editHistory(
     amount: string,
-    callback: Dispatch<SetStateAction<string>>,
     source: Currency,
     target: Currency,
+    callback: Dispatch<SetStateAction<string>>,
+    setIsFetchingRate: Dispatch<SetStateAction<boolean>>,
   ) {
     const operation = getOperation(source, target, history)
 
@@ -51,16 +61,24 @@ export default function Home() {
       // Display new rate
       showNewExchangeRate(operation.exchangeRate);
     } else {
-      // Asynchronous action to get new rate
-      const exchangeRate = await fetchExchangeRate(source, target);
-      // Cache new rate
-      setOperations(source, target, exchangeRate);
-      // Show rate as 2 decimals number
-      const result = (Number(amount) * exchangeRate).toFixed(2);
-      callback(result);
-      
-      // Display new rate
-      showNewExchangeRate(exchangeRate);
+      setIsFetchingRate(true);
+
+
+      try {
+        const exchangeRate = await fetchExchangeRate(source, target);
+        // Cache new rate
+        setOperations(source, target, exchangeRate);
+        // Show rate as 2 decimals number
+        const result = (Number(amount) * exchangeRate).toFixed(2);
+        callback(result);
+        
+        // Display new rate
+        showNewExchangeRate(exchangeRate);
+      } catch {
+        console.log('Something went wrong!')
+      }
+
+      setIsFetchingRate(false);
     }
   }
 
@@ -87,22 +105,22 @@ export default function Home() {
 
   function handleAmountFromChange(amount: string) { 
     setAmountFrom(amount);
-    editHistory(amount, setAmountTo, currencyFrom, currencyTo)
+    editHistory(amount, currencyFrom, currencyTo, setAmountTo, setIsFetchingExchangeRate);
   }
   
   function handleAmountToChange(amount: string) {
     setAmountTo(amount);
-    editHistory(amount, setAmountFrom, currencyTo, currencyFrom)
+    editHistory(amount, currencyTo, currencyFrom, setAmountFrom, setIsFetchingReverseRate);
   }
-
+  
   function handleCurrencyFromChange(newCurrency: Currency) {
     setCurrencyFrom(newCurrency);
-    editHistory(amountFrom, setAmountTo, newCurrency, currencyTo)
+    editHistory(amountFrom, newCurrency, currencyTo, setAmountTo, setIsFetchingExchangeRate);
   }
-
+  
   function handleCurrencyToChange(newCurrency: Currency) {
     setCurrencyTo(newCurrency);
-    editHistory(amountFrom, setAmountTo, currencyFrom, newCurrency)
+    editHistory(amountFrom, currencyFrom, newCurrency, setAmountTo, setIsFetchingExchangeRate);
   }
 
   function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
@@ -132,10 +150,11 @@ export default function Home() {
             <h3 className='text-xs font-bold mb-2'>Recipient Gets</h3>
 
             <ConversionSection
+              isFetchingRate={isFetchingReverseRate}
               amount={amountFrom}
-              handleAmountChange={handleAmountFromChange}
               currency={currencyFrom}
               currencyUnavailable={currencyTo}
+              handleAmountChange={handleAmountFromChange}
               handleCurrencyChange={handleCurrencyFromChange}
             />
 
@@ -145,10 +164,11 @@ export default function Home() {
             <h3 className='text-xs font-bold mb-2'>You Send</h3>
 
             <ConversionSection
+              isFetchingRate={isFetchingExchangeRate}
               amount={amountTo}
-              handleAmountChange={handleAmountToChange}
               currency={currencyTo}
               currencyUnavailable={currencyFrom}
+              handleAmountChange={handleAmountToChange}
               handleCurrencyChange={handleCurrencyToChange}
             />
           </div>
