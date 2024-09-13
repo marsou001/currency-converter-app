@@ -10,7 +10,7 @@ export default function ConversionOptionChip(props: ConversionOptionChipProps) {
     props.setConversionOption(props.from, props.to);
   }
 
-  const isSelected = props.from === props.currencyFrom && props.to === props.currencyTo;
+  const isSelected = props.from === props.sourceCurrency && props.to === props.targetCurrency;
 
   return (
     <div

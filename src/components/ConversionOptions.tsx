@@ -11,9 +11,9 @@ export default function ConversionOptions(props: ConversionOptionsProps) {
           <ConversionOptionChip
             key={option[1]}
             from={option[0]}
-            currencyFrom={props.currencyFrom}
+            sourceCurrency={props.sourceCurrency}
             to={option[1]}
-            currencyTo={props.currencyTo}
+            targetCurrency={props.targetCurrency}
             setConversionOption={props.setConversionOption}
           />
         ))}

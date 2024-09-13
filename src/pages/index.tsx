@@ -7,10 +7,10 @@ import Benefits from '@/components/Benefits';
 import { getOperation, isRateStillValid } from '@/utils';
 
 export default function Home() {
-  const [currencyFrom, setCurrencyFrom] = useState<Currency>('USD');
-  const [amountFrom, setAmountFrom] = useState('1000');
-  const [currencyTo, setCurrencyTo] = useState<Currency>('CAD');
-  const [amountTo, setAmountTo] = useState('1000');
+  const [sourceCurrency, setSourceCurrency] = useState<Currency>('USD');
+  const [sourceAmount, setSourceAmount] = useState('1000');
+  const [targetCurrency, setTargetCurrency] = useState<Currency>('CAD');
+  const [targetAmount, setTargetAmount] = useState('1000');
   const [history, setHistory] = useState<Record<string, Operation>>({});
   const [exchangeRate, setExchangeRate] = useState(1.081681);
   const [isFetchingExchangeRate, setIsFetchingExchangeRate] = useState(false);
@@ -21,11 +21,11 @@ export default function Home() {
       setIsFetchingExchangeRate(true);
 
       try {
-        const exchangeRate = await fetchExchangeRate(currencyFrom, currencyTo);
-        setOperations(currencyFrom, currencyTo, exchangeRate);
+        const exchangeRate = await fetchExchangeRate(sourceCurrency, targetCurrency);
+        setOperations(sourceCurrency, targetCurrency, exchangeRate);
 
-        const result = (Number(amountFrom) * exchangeRate).toFixed(2);
-        setAmountTo(result);
+        const result = (Number(sourceAmount) * exchangeRate).toFixed(2);
+        setTargetAmount(result);
       
         showNewExchangeRate(exchangeRate);
       } catch {
@@ -39,9 +39,9 @@ export default function Home() {
   }, []);
 
   function setConversionOption(from: Currency, to: Currency) {
-    setCurrencyFrom(from);
-    setCurrencyTo(to);
-    editHistory(amountFrom, from, to, setAmountTo, setIsFetchingExchangeRate);
+    setSourceCurrency(from);
+    setTargetCurrency(to);
+    editHistory(sourceAmount, from, to, setTargetAmount, setIsFetchingExchangeRate);
   }
 
   async function editHistory(
@@ -103,24 +103,24 @@ export default function Home() {
     setExchangeRate(newExchangeRate);
   }
 
-  function handleAmountFromChange(amount: string) { 
-    setAmountFrom(amount);
-    editHistory(amount, currencyFrom, currencyTo, setAmountTo, setIsFetchingExchangeRate);
+  function handleSourceAmountChange(amount: string) { 
+    setSourceAmount(amount);
+    editHistory(amount, sourceCurrency, targetCurrency, setTargetAmount, setIsFetchingExchangeRate);
   }
   
-  function handleAmountToChange(amount: string) {
-    setAmountTo(amount);
-    editHistory(amount, currencyTo, currencyFrom, setAmountFrom, setIsFetchingReverseRate);
+  function handleTargetAmountChange(amount: string) {
+    setTargetAmount(amount);
+    editHistory(amount, targetCurrency, sourceCurrency, setSourceAmount, setIsFetchingReverseRate);
   }
   
-  function handleCurrencyFromChange(newCurrency: Currency) {
-    setCurrencyFrom(newCurrency);
-    editHistory(amountFrom, newCurrency, currencyTo, setAmountTo, setIsFetchingExchangeRate);
+  function handleSourceCurrencyChange(newCurrency: Currency) {
+    setSourceCurrency(newCurrency);
+    editHistory(sourceAmount, newCurrency, targetCurrency, setTargetAmount, setIsFetchingExchangeRate);
   }
   
-  function handleCurrencyToChange(newCurrency: Currency) {
-    setCurrencyTo(newCurrency);
-    editHistory(amountFrom, currencyFrom, newCurrency, setAmountTo, setIsFetchingExchangeRate);
+  function handleTargetCurrencyChange(newCurrency: Currency) {
+    setTargetCurrency(newCurrency);
+    editHistory(sourceAmount, sourceCurrency, newCurrency, setTargetAmount, setIsFetchingExchangeRate);
   }
 
   async function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
@@ -134,7 +134,7 @@ export default function Home() {
       <div className='md:flex md:justify-between md:items-center'>
         <h1 className='font-bold'>Complete Global Coverage</h1>
       
-        <ConversionOptions currencyFrom={currencyFrom} currencyTo={currencyTo} setConversionOption={setConversionOption} />
+        <ConversionOptions sourceCurrency={sourceCurrency} targetCurrency={targetCurrency} setConversionOption={setConversionOption} />
       </div>
 
       <h2 className='text-xl font-bold md:hidden mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
@@ -150,11 +150,11 @@ export default function Home() {
 
             <ConversionSection
               isFetchingRate={isFetchingReverseRate}
-              amount={amountFrom}
-              currency={currencyFrom}
-              currencyUnavailable={currencyTo}
-              handleAmountChange={handleAmountFromChange}
-              handleCurrencyChange={handleCurrencyFromChange}
+              amount={sourceAmount}
+              currency={sourceCurrency}
+              currencyUnavailable={targetCurrency}
+              handleAmountChange={handleSourceAmountChange}
+              handleCurrencyChange={handleSourceCurrencyChange}
             />
 
             <ConversionDetailsInfo exchangeRate={exchangeRate} />
@@ -164,11 +164,11 @@ export default function Home() {
 
             <ConversionSection
               isFetchingRate={isFetchingExchangeRate}
-              amount={amountTo}
-              currency={currencyTo}
-              currencyUnavailable={currencyFrom}
-              handleAmountChange={handleAmountToChange}
-              handleCurrencyChange={handleCurrencyToChange}
+              amount={targetAmount}
+              currency={targetCurrency}
+              currencyUnavailable={sourceCurrency}
+              handleAmountChange={handleTargetAmountChange}
+              handleCurrencyChange={handleTargetCurrencyChange}
             />
           </div>
         </div>
