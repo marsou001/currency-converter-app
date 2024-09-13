@@ -123,11 +123,10 @@ export default function Home() {
     editHistory(amountFrom, currencyFrom, newCurrency, setAmountTo, setIsFetchingExchangeRate);
   }
 
-  function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
-    // async operation, generating random number at the moment
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(Math.random()), 500);
-    });
+  async function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/0000051db7c88797e2d42dce/pair/${source}/${target}`);
+    const data = await response.json();
+    return data.conversion_rate;
   }
 
   return (
