@@ -14,7 +14,7 @@ export default function ConversionOptionChip(props: ConversionOptionChipProps) {
 
   return (
     <div
-      className={`border-2 ${isSelected ? 'border-blue bg-blue-light' : 'border-transparent bg-white'} flex items-center gap-1 rounded-lg py-2 pl-2 pr-6 shadow-gray-200 shadow-lg`}
+      className={`border-2 ${isSelected ? 'border-blue bg-blue-light' : 'border-transparent bg-white'} flex items-center gap-1 rounded-lg py-2 pl-2 pr-6 shadow-gray-200 shadow-lg cursor-pointer`}
       onClick={setOption}
     >
       <Image 
