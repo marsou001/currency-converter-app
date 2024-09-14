@@ -1,6 +1,6 @@
 import { useState, useReducer, Dispatch, useEffect } from 'react';
 import { getOperation, isRateStillValid } from '@/utils';
-import { Action, Currency, Operation, State } from '@/types';
+import { Action, Currency, Operation } from '@/types';
 import ActionTypes from '@/enums/ActionTypes.enum';
 import ConversionSection from '@/components/ConversionSection';
 import ConversionOptions from '@/components/ConversionOptions';
@@ -39,11 +39,10 @@ export default function Home() {
     initSetup()
   }, []);
 
-  // TODO: change parameters' names
-  function setConversionOption(from: Currency, to: Currency) {
-    sourceDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: from }});
-    targetDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: to }});
-    editHistory(sourceState.amount, from, to, targetDispatch);
+  function setConversionOption(source: Currency, target: Currency) {
+    sourceDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: source }});
+    targetDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: target }});
+    editHistory(sourceState.amount, source, target, targetDispatch);
   }
 
   async function editHistory(
