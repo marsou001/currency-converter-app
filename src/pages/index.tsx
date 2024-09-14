@@ -1,67 +1,68 @@
-import { useState, Dispatch, SetStateAction, useEffect } from 'react';
-import { Currency, Operation } from '@/types';
+import { useState, useReducer, Dispatch, useEffect } from 'react';
+import { getOperation, isRateStillValid } from '@/utils';
+import { Action, Currency, Operation, State } from '@/types';
+import ActionTypes from '@/enums/ActionTypes.enum';
 import ConversionSection from '@/components/ConversionSection';
 import ConversionOptions from '@/components/ConversionOptions';
 import ConversionDetailsInfo from '@/components/ConversionDetailsInfo';
 import Benefits from '@/components/Benefits';
-import { getOperation, isRateStillValid } from '@/utils';
+import reducerFactory from '@/reducerFactory';
+
+const sourceReducer = reducerFactory();
+const targetReducer = reducerFactory();
 
 export default function Home() {
-  const [sourceCurrency, setSourceCurrency] = useState<Currency>('USD');
-  const [sourceAmount, setSourceAmount] = useState('1000');
-  const [targetCurrency, setTargetCurrency] = useState<Currency>('CAD');
-  const [targetAmount, setTargetAmount] = useState('1000');
+  const [sourceState, sourceDispatch] = useReducer(sourceReducer, { amount: '1000', currency: 'USD', isFetchingRate: false });
+  const [targetState, targetDispatch] = useReducer(targetReducer, { amount: '1000', currency: 'CAD', isFetchingRate: false });
   const [history, setHistory] = useState<Record<string, Operation>>({});
   const [exchangeRate, setExchangeRate] = useState(1.081681);
-  const [isFetchingExchangeRate, setIsFetchingExchangeRate] = useState(false);
-  const [isFetchingReverseRate, setIsFetchingReverseRate] = useState(false);
 
   useEffect(() => {
     async function initSetup () {
-      setIsFetchingExchangeRate(true);
+      targetDispatch({ type: ActionTypes.SET_IS_FETCHING_RATE, payload: { isFetchingRate: true } });
 
       try {
-        const exchangeRate = await fetchExchangeRate(sourceCurrency, targetCurrency);
-        setOperations(sourceCurrency, targetCurrency, exchangeRate);
+        const exchangeRate = await fetchExchangeRate(sourceState.currency, targetState.currency);
+        setOperations(sourceState.currency, targetState.currency, exchangeRate);
 
-        const result = (Number(sourceAmount) * exchangeRate).toFixed(2);
-        setTargetAmount(result);
+        const result = (Number(sourceState.amount) * exchangeRate).toFixed(2);
+        targetDispatch({ type: ActionTypes.SET_AMOUNT, payload: { amount: result }});
       
         showNewExchangeRate(exchangeRate);
       } catch {
         console.log('Something went wrong!');
       }
 
-      setIsFetchingExchangeRate(false);
+      targetDispatch({ type: ActionTypes.SET_IS_FETCHING_RATE, payload: { isFetchingRate: false } });
     }
 
     initSetup()
   }, []);
 
+  // TODO: change parameters' names
   function setConversionOption(from: Currency, to: Currency) {
-    setSourceCurrency(from);
-    setTargetCurrency(to);
-    editHistory(sourceAmount, from, to, setTargetAmount, setIsFetchingExchangeRate);
+    sourceDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: from }});
+    targetDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: to }});
+    editHistory(sourceState.amount, from, to, targetDispatch);
   }
 
   async function editHistory(
     amount: string,
     source: Currency,
     target: Currency,
-    callback: Dispatch<SetStateAction<string>>,
-    setIsFetchingRate: Dispatch<SetStateAction<boolean>>,
+    callback: Dispatch<Action>,
   ) {
     const operation = getOperation(source, target, history)
 
     if (operation && isRateStillValid(operation.timestamp)) {
       // Show rate as 2 decimals number
       const result = (Number(amount) * operation.exchangeRate).toFixed(2);
-      callback(result);
+      callback({ type: ActionTypes.SET_AMOUNT, payload: { amount: result }});
 
       // Display new rate
       showNewExchangeRate(operation.exchangeRate);
     } else {
-      setIsFetchingRate(true);
+      callback({ type: ActionTypes.SET_IS_FETCHING_RATE, payload: { isFetchingRate: true }});
 
 
       try {
@@ -70,7 +71,7 @@ export default function Home() {
         setOperations(source, target, exchangeRate);
         // Show rate as 2 decimals number
         const result = (Number(amount) * exchangeRate).toFixed(2);
-        callback(result);
+        callback({ type: ActionTypes.SET_AMOUNT, payload: { amount: result }});
         
         // Display new rate
         showNewExchangeRate(exchangeRate);
@@ -78,7 +79,7 @@ export default function Home() {
         console.log('Something went wrong!')
       }
 
-      setIsFetchingRate(false);
+      callback({ type: ActionTypes.SET_IS_FETCHING_RATE, payload: { isFetchingRate: false }});
     }
   }
 
@@ -104,27 +105,28 @@ export default function Home() {
   }
 
   function handleSourceAmountChange(amount: string) { 
-    setSourceAmount(amount);
-    editHistory(amount, sourceCurrency, targetCurrency, setTargetAmount, setIsFetchingExchangeRate);
+    sourceDispatch({ type: ActionTypes.SET_AMOUNT, payload: { amount }});
+    editHistory(amount, sourceState.currency, targetState.currency, targetDispatch);
   }
   
   function handleTargetAmountChange(amount: string) {
-    setTargetAmount(amount);
-    editHistory(amount, targetCurrency, sourceCurrency, setSourceAmount, setIsFetchingReverseRate);
+    targetDispatch({ type: ActionTypes.SET_AMOUNT, payload: { amount }});
+    editHistory(amount, targetState.currency, sourceState.currency, sourceDispatch);
   }
   
   function handleSourceCurrencyChange(newCurrency: Currency) {
-    setSourceCurrency(newCurrency);
-    editHistory(sourceAmount, newCurrency, targetCurrency, setTargetAmount, setIsFetchingExchangeRate);
+    sourceDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: newCurrency }});
+    editHistory(sourceState.amount, newCurrency, targetState.currency, targetDispatch);
   }
   
   function handleTargetCurrencyChange(newCurrency: Currency) {
-    setTargetCurrency(newCurrency);
-    editHistory(sourceAmount, sourceCurrency, newCurrency, setTargetAmount, setIsFetchingExchangeRate);
+    targetDispatch({ type: ActionTypes.SET_CURRENCY, payload: { currency: newCurrency }});
+    editHistory(sourceState.amount, sourceState.currency, newCurrency, targetDispatch);
   }
 
   async function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
-    const response = await fetch(`https://v6.exchangerate-api.com/v6/0000051db7c88797e2d42dce/pair/${source}/${target}`);
+    const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+    const response = await fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${source}/${target}`);
     const data = await response.json();
     return data.conversion_rate;
   }
@@ -134,7 +136,7 @@ export default function Home() {
       <div className='md:flex md:justify-between md:items-center'>
         <h1 className='font-bold'>Complete Global Coverage</h1>
       
-        <ConversionOptions sourceCurrency={sourceCurrency} targetCurrency={targetCurrency} setConversionOption={setConversionOption} />
+        <ConversionOptions sourceCurrency={sourceState.currency} targetCurrency={targetState.currency} setConversionOption={setConversionOption} />
       </div>
 
       <h2 className='text-xl font-bold md:hidden mt-16'>Compare Foreign Exchange Rates and Save Money</h2>
@@ -149,10 +151,10 @@ export default function Home() {
             <h3 className='text-xs font-bold mb-2'>Recipient Gets</h3>
 
             <ConversionSection
-              isFetchingRate={isFetchingReverseRate}
-              amount={sourceAmount}
-              currency={sourceCurrency}
-              currencyUnavailable={targetCurrency}
+              isFetchingRate={sourceState.isFetchingRate}
+              amount={sourceState.amount}
+              currency={sourceState.currency}
+              currencyUnavailable={targetState.currency}
               handleAmountChange={handleSourceAmountChange}
               handleCurrencyChange={handleSourceCurrencyChange}
             />
@@ -163,10 +165,10 @@ export default function Home() {
             <h3 className='text-xs font-bold mb-2'>You Send</h3>
 
             <ConversionSection
-              isFetchingRate={isFetchingExchangeRate}
-              amount={targetAmount}
-              currency={targetCurrency}
-              currencyUnavailable={sourceCurrency}
+              isFetchingRate={targetState.isFetchingRate}
+              amount={targetState.amount}
+              currency={targetState.currency}
+              currencyUnavailable={sourceState.currency}
               handleAmountChange={handleTargetAmountChange}
               handleCurrencyChange={handleTargetCurrencyChange}
             />
