@@ -5,4 +5,5 @@ type State = {
   currency: Currency;
   isFetchingRate: boolean;
 }
+
 export default State;
