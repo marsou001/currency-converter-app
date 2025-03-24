@@ -124,10 +124,18 @@ export default function Home() {
   }
 
   async function fetchExchangeRate(source: Currency, target: Currency): Promise<number> {
-    const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-    const response = await fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${source}/${target}`);
-    const data = await response.json();
-    return data.conversion_rate;
+    try {
+      const response = await fetch("/api/convert", {
+        method: "POST",
+        body: JSON.stringify({ source, target }),
+        headers: { "content-type": "application/json" },
+      });
+      const exchangeRate = await response.text();
+      return Number(exchangeRate);
+    } catch (error) {
+      console.log(error)
+      return 0;
+    }
   }
 
   return (
