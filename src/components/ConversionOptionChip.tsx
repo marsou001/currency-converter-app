@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import ConversionOptionChipProps from "@/types/ConversionOptionChipProps";
+import { ConversionOptionChipProps } from "@/types";
 import { getCountry, getCurrencyIcon } from '@/utils';
 
 export default function ConversionOptionChip(props: ConversionOptionChipProps) {

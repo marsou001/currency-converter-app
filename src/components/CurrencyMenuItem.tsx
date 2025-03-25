@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { getCountry, getCurrencyIcon } from '@/utils';
-import CurrencyMenuItemProps from '@/types/CurrencyMenuItemProps';
+import { CurrencyMenuItemProps } from '@/types';
 
 export default function CurrencyFromMenuItem(props: CurrencyMenuItemProps) {
   const flagIconURL = getCurrencyIcon(props.currency);

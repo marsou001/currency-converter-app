@@ -1,4 +1,4 @@
-import CurrencyMenuProps from "@/types/CurrencyMenuProps";
+import { CurrencyMenuProps } from "@/types";
 
 export default function CurrencyMenu(props: CurrencyMenuProps) {
   return (

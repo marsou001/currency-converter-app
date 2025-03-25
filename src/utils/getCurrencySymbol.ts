@@ -1,4 +1,4 @@
-import Currency from "@/types/Currency";
+import { Currency } from "@/types";
 
 export default function getCurrencySymbol(currency: Currency) {
   switch(currency) {

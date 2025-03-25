@@ -1,4 +1,4 @@
-import MenuControlProps from '@/types/MenuControlProps';
+import { MenuControlProps } from '@/types';
 import { getCountry, getCurrencyIcon } from '@/utils';
 import Image from 'next/image';
 

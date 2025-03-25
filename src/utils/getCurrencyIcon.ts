@@ -1,4 +1,4 @@
-import Currency from "@/types/Currency";
+import { Currency } from "@/types";
 
 export default function getCurrencyIcon(currency: Currency) {
   let icon = '';
